@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace SchoolManagementApp.MVC.Data;
 
-public partial class Student
+public partial class Class
 {
     public int Id { get; set; }
 
-    public string FirstName { get; set; } = null!;
+    public int? LecturerId { get; set; }
 
-    public string LastName { get; set; } = null!;
-
-    public DateTime? DateOfBirth { get; set; }
+    public TimeOnly? Time { get; set; }
 
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+
+    public virtual Lecturer? Lecturer { get; set; }
 }

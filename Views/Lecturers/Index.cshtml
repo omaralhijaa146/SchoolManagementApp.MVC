@@ -34,7 +34,6 @@
                 <td>
                     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Old Delete</a>
                     <button data-id="@item.Id" class="btn btn-danger btn-delete" type="button">Delete</button>
                 </td>
             </tr>
@@ -42,8 +41,8 @@
     </tbody>
 </table>
 
-<form asp-action="Delete" id="lecturer-form">
-    <input type="hidden" id="lecturer-del-id" name="Id">
+<form asp-action="Delete" id="delete-form">
+    <input type="hidden" id="lecturer-id" name="Id">
 </form>
 
 @section Scripts {
@@ -68,8 +67,8 @@
                         });
 
                         const btnId = $(this).data("id");
-                        const form = $("#lecturer-form");
-                        const input = $("#lecturer-del-id");
+                        const form = $("#delete-form");
+                        const input = $("#lecturer-id");
                         input.val(btnId);
                         form.submit();
                     }

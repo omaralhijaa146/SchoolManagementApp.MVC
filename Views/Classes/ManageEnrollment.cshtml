@@ -1,0 +1,96 @@
+@model SchoolManagementApp.MVC.Models.ClassEnrollmentVM
+
+@{
+    ViewData["Title"] = "Manage Enrollment";
+}
+
+<h2>Manage Enrollments For @Model.Class.Time Session of @Model.Class.CourseName</h2>
+<h3>Instructor: @Model.Class.LectruerName</h3>
+<hr>
+
+<h3> Student List</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Students)
+        {
+            <tr>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>
+
+                    @{
+                        string btnText = item.IsEnrolled ? "Remove" : "Add";
+                        string btnClass = item.IsEnrolled ? "danger" : "success";
+                        bool shouldEnroll = !item.IsEnrolled;
+
+
+                    }
+
+                    <button data-studentId="@item.Id" data-shouldEnroll="@shouldEnroll"
+                        class="btn btn-@btnClass enrollment-btn" type="button">@btnText</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form asp-action="EnrollStudent" id=class-enrollment-form>
+    <input type="hidden" id="classId" name="ClassId" value="@Model.Class.Id">
+    <input type="hidden" id="studentId" name="StudentId">
+    <input type="hidden" id="shouldEnroll" name="ShouldEnroll">
+</form>
+
+@section Scripts {
+    <script>
+        $(function () {
+
+            const dataTable = new DataTable(".table");
+
+            $(".enrollment-btn").click(function (e) {
+                const btn = $(this);
+                const shouldEnroll = btn.attr("data-shouldEnroll").toLowerCase();
+                const convertedShouldEnroll = shouldEnroll == "true" ? true : false;
+                console.log(convertedShouldEnroll)
+                console.log(shouldEnroll.toLowerCase())
+                const swalOptions = {
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+
+                };
+
+                Object.assign(swalOptions, {
+                    title: !convertedShouldEnroll ? "Are you sure?" : "Add Enrollment",
+                    text: !convertedShouldEnroll ? "You won't be able to revert this!" : "",
+                    confirmButtonText: !convertedShouldEnroll ? "Yes, delete it!" : "Yes, Add it!"
+                });
+                Swal.fire(swalOptions).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Swal.fire({
+                            title: !convertedShouldEnroll ? "Deleted!" : "Added",
+                            text: !convertedShouldEnroll ? "Student has been deleted." : "Student has been added",
+                            icon: "success"
+                        });
+
+                        const stdId = btn.attr("data-studentId");
+
+
+                        $("#studentId").val(stdId);
+                        $("#shouldEnroll").val(shouldEnroll);
+                        $("#class-enrollment-form").submit();
+                    }
+                });
+            });
+        })
+    </script>
+}

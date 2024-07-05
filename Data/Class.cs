@@ -11,6 +11,10 @@ public partial class Class
 
     public TimeOnly? Time { get; set; }
 
+    public int? CourseId { get; set; }
+
+    public virtual Course? Course { get; set; }
+
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
     public virtual Lecturer? Lecturer { get; set; }
